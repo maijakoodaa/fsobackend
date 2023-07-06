@@ -65,6 +65,24 @@ function getRandomInt(max) {
 app.post('/api/persons', (request, response) => {
   const person_scratch = request.body
   
+  if (!person_scratch.name) {
+    return response.status(400).json({ 
+      error: 'name missing' 
+    })
+  }
+
+  if (!person_scratch.number) {
+    return response.status(400).json({ 
+      error: 'number missing' 
+    })
+  }
+
+  if (persons.find(({name}) => name === person_scratch.name)) {
+    return response.status(400).json({ 
+      error: 'name already in phonebook' 
+    })
+  }
+
   const id = getRandomInt(persons.length*10000)
   const person = {
     id: id,
