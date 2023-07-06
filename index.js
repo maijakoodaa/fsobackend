@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 
+app.use(express.json())
+
 let persons = [
   {
     id: 1,
@@ -54,4 +56,24 @@ app.delete('/api/persons/:id', (request, response) => {
     persons = persons.filter(person => person.id !== id)
 
     response.status(204).end()
+})
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
+app.post('/api/persons', (request, response) => {
+  const person_scratch = request.body
+  
+  const id = getRandomInt(persons.length*10000)
+  const person = {
+    id: id,
+    name: person_scratch.name,
+    number: person_scratch.number
+  }
+
+  console.log(person)
+  
+  persons = persons.concat(person)
+  response.json(person)
 })
