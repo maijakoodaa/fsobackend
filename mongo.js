@@ -13,7 +13,14 @@ const url =
 mongoose.set('strictQuery', false)
 mongoose.connect(url)
 
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
+const id = getRandomInt(50000)
+
 const personSchema = new mongoose.Schema({
+  id: Number,
   name: String,
   number: String,
 })
@@ -22,8 +29,9 @@ const Person = mongoose.model('Person', personSchema)
 
 if (process.argv.length > 3) {
     const person = new Person({
-        name: process.argv[3],
-        number: process.argv[4],
+      id: id,
+      name: process.argv[3],
+      number: process.argv[4],
     })
 
     person.save().then(result => {
