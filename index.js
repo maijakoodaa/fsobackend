@@ -86,7 +86,22 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
-app.post('/api/persons', (request, response) => {
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
+
+  const person = {
+    name: body.name,
+    number: body.number,
+  }
+
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then(updatedPerson => {
+      response.json(updatedPerson)
+    })
+    .catch(error => next(error))
+})
+
+app.post('/api/persons', (request, response, next) => {
   const person_scratch = request.body
   
   if (!person_scratch.name) {
@@ -100,13 +115,6 @@ app.post('/api/persons', (request, response) => {
       error: 'number missing' 
     })
   }
-
-  if (persons.find(({name}) => name === person_scratch.name)) {
-    return response.status(400).json({ 
-      error: 'name already in phonebook' 
-    })
-  }
-
   const id = getRandomInt((persons.length+1)*10000)
 
   const person = new Person({
@@ -117,8 +125,16 @@ app.post('/api/persons', (request, response) => {
   person.save().then(savedPerson => {
     response.json(savedPerson)
   })
-  //persons = persons.concat(person)
-  //response.json(person)
+  .catch(error => next(error))
+      //persons = persons.concat(person)
+      //response.json(person)
+
+  /*if (persons.find(({name}) => name === person_scratch.name)) {
+    return response.status(400).json({ 
+      error: 'name already in phonebook' 
+    })
+  }*/
+  
 })
 
 const errorHandler = (error, request, response, next) => {
