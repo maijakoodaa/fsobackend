@@ -57,7 +57,9 @@ app.get('/api/persons/', (request, response) => {
   
 app.get('/info/', (req, res) => {
     const date = new Date()
-    res.send(`<p>Phonebook has info for ${Person.length} people <br><br> ${date} </p>`)
+    Person.find({}).then(persons => {
+      res.send(`<p>Phonebook has info for ${persons.length} people <br><br> ${date} </p>`)
+    })
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
