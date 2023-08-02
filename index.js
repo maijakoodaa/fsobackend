@@ -113,13 +113,11 @@ app.post('/api/persons', (request, response, next) => {
     })
   }
   const id = getRandomInt((persons.length+1)*10000)
-  console.log("jeeeka")
   const person = new Person({
     id: id,
     name: person_scratch.name,
     number: person_scratch.number
   })
-  console.log("jee")
   person.save().then(savedPerson => {
     response.json(savedPerson)
   })
